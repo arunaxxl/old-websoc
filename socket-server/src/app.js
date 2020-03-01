@@ -3,6 +3,22 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const documents = {};
+let pieChartData = (()=>{
+  let  data = [500,200,190]
+  for (const item of data) {
+    data.push(item * (Math.random() * 10))
+  }
+  return data;
+ });
+
+ let barChartData = (()=>{
+  let  data = [65, 59, 90, 81, 56, 55, 40]
+  for (const item of data) {
+    data.push(item * (Math.random() * 5))
+  }
+  return data;
+ });
+
 
 io.on('connection', socket => {
 
@@ -16,18 +32,20 @@ io.on('connection', socket => {
 
     socket.on('getpiechart',() => {
          //pie chart data
-        io.emit('piechart', {type:'piechart', data: [500,300,100]});
+         setTimeout(() => {
+          io.emit('piechart', {type:'piechart', data:pieChartData()});
+        }, 15000);
     });
 
     socket.on('getradarchart',() => {
         //radar chart data
-       io.emit('radarchart', {type:'radarchart', data: {seriesA:[65, 59, 90, 81, 56, 55, 40],seriesB:[28, 48, 40, 19, 96, 27, 100]}});
-   });
+       io.emit('radarchart', {type:'radarchart', data: {seriesA:barChartData(),seriesB:barChartData()}});
+      });
 
     socket.on('getbarchart',() => {
     //radar chart data
-       io.emit('barchart', {type:'barchart', data: {seriesA:[65, 59, 80, 81, 56, 55, 40],seriesB:[28, 48, 40, 19, 86, 27, 90]}});
-    });
+       io.emit('barchart', {type:'barchart', data: {seriesA:barChartData(),seriesB:barChartData()}});
+      });
 
     socket.on('gettabledata',() => {
         //radar chart data
